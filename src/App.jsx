@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import NoteList from './NoteList';
 import NoteForm from './NoteForm';
 import { getNotes, createNote, updateNote, deleteNote } from './api';
@@ -9,19 +10,85 @@ import { getNotes, createNote, updateNote, deleteNote } from './api';
 //   - loading: booleano para indicar carregamento
 
 function App() {
-  // TODO: inicializar os estados com useState
-  // TODO: buscar todas as notas da API ao montar o componente (useEffect + getNotes)
-  // TODO: handleCreate → chama createNote, atualiza o estado notes
-  // TODO: handleUpdate → chama updateNote, atualiza o estado notes
-  // TODO: handleDelete → chama deleteNote, remove a nota do estado notes
-  // TODO: handleEdit   → define noteToEdit para abrir o formulário em modo edição
-  // TODO: handleCancel → limpa noteToEdit
+  const [notes, setNotes] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [editingNote, setEditingNote] = useState(null);
+  const [showForm, setShowForm] = useState(false);
+
+  useEffect(() => {
+    const fetchNotes = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const data = await getNotes();
+        setNotes(data);
+      } catch (err) {
+        setError('Erro ao carregar notas. Tente novamente.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchNotes();
+  }, []);
+
+  const handleCreate = async (data) => {
+    const newNote = await createNote(data);
+    setNotes((prevNotes) => [...prevNotes, newNote]);
+    setShowForm(false);
+  };
+
+  const handleUpdate = async (id, data) => {
+    const updatedNote = await updateNote(id, data);
+    setNotes((prevNotes) =>
+      prevNotes.map((note) => (note.id === id ? updatedNote : note))
+    );
+    setEditingNote(null);
+    setShowForm(false);
+  };
+
+  const handleDelete = async (id) => {
+    await deleteNote(id);
+    setNotes((prevNotes) => prevNotes.filter((note) => note.id !== id));
+  };
+
+  const handleEdit = (note) => {
+    setEditingNote(note);
+    setShowForm(true);
+  };
+
+  const handleCancelEdit = () => {
+    setEditingNote(null);
+    setShowForm(false);
+  };
+
+  if (loading) {
+    return <div>Carregando...</div>;
+  }
+
+  if (error) {
+    return <div>{error}</div>;
+  }
 
   return (
     <div>
-      {/* Título principal da aplicação */}
-      {/* <NoteForm> para criar ou editar uma nota */}
-      {/* <NoteList> para exibir todas as notas */}
+      <h1>Gerenciador de Notas</h1>
+      {!showForm && (
+        <button onClick={() => setShowForm(true)}>Nova Nota</button>
+      )}
+      {showForm && (
+        <NoteForm
+          note={editingNote}
+          onSubmit={editingNote ? handleUpdate : handleCreate}
+          onCancel={handleCancelEdit}
+        />
+      )}
+      <NoteList
+        notes={notes}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
+      />
     </div>
   );
 }
