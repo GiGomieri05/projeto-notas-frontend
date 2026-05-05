@@ -79,8 +79,11 @@ function App() {
       )}
       {showForm && (
         <NoteForm
-          note={editingNote}
-          onSubmit={editingNote ? handleUpdate : handleCreate}
+          initialData={editingNote}
+          onSubmit={editingNote
+            ? (data) => handleUpdate(editingNote.id, data)
+            : handleCreate
+          }
           onCancel={handleCancelEdit}
         />
       )}
