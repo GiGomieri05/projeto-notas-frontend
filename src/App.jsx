@@ -64,13 +64,23 @@ function App() {
     setShowForm(false);
   };
 
-  if (loading) {
-    return <div className="loading-state">Carregando...</div>;
-  }
+  const renderContent = () => {
+    if (loading) {
+      return <div className="loading-state">Carregando notas...</div>;
+    }
 
-  if (error) {
-    return <div className="error-state">{error}</div>;
-  }
+    if (error) {
+      return <div className="error-state">{error}</div>;
+    }
+
+    return (
+      <NoteList
+        notes={notes}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
+      />
+    );
+  };
 
   return (
     <div className="app-container">
@@ -98,11 +108,7 @@ function App() {
           onCancel={handleCancelEdit}
         />
       )}
-      <NoteList
-        notes={notes}
-        onEdit={handleEdit}
-        onDelete={handleDelete}
-      />
+      {renderContent()}
     </div>
   );
 }
