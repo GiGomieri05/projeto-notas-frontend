@@ -77,7 +77,13 @@ function App() {
       <header className="app-header">
         <h1 className="app-title">Minhas Notas</h1>
         {!showForm && (
-          <button className="btn btn-primary" onClick={() => setShowForm(true)}>
+          <button
+            className="btn btn-primary"
+            onClick={() => {
+              setEditingNote(null);
+              setShowForm(true);
+            }}
+          >
             Nova Nota
           </button>
         )}

@@ -37,32 +37,38 @@ function NoteForm({ initialData, onSubmit, onCancel }) {
   const isEditing = !!initialData;
 
   return (
-    <div>
-      <h2>{isEditing ? 'Editar nota' : 'Nova nota'}</h2>
-      {validationError && <p style={{ color: 'red' }}>{validationError}</p>}
-      <div>
+    <div className="note-form-container">
+      <h2 className="note-form-title">{isEditing ? 'Editar nota' : 'Nova nota'}</h2>
+      {validationError && <p className="form-error">{validationError}</p>}
+      <div className="form-group">
         <label htmlFor="title">Título:</label>
         <input
           id="title"
           type="text"
+          className="form-input"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="Digite o título"
         />
       </div>
-      <div>
+      <div className="form-group">
         <label htmlFor="content">Conteúdo:</label>
         <textarea
           id="content"
+          className="form-textarea"
           value={content}
           onChange={(e) => setContent(e.target.value)}
           placeholder="Digite o conteúdo"
           rows={4}
         />
       </div>
-      <div>
-        <button onClick={handleSubmit}>Salvar</button>
-        <button onClick={onCancel}>Cancelar</button>
+      <div className="form-actions">
+        <button className="btn btn-primary" onClick={handleSubmit}>
+          Salvar
+        </button>
+        <button className="btn btn-cancel" onClick={onCancel}>
+          Cancelar
+        </button>
       </div>
     </div>
   );

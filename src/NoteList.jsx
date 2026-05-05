@@ -7,13 +7,20 @@ import NoteCard from './NoteCard';
 //   - onDelete: função repassada para cada NoteCard
 
 function NoteList({ notes, onEdit, onDelete }) {
-  // TODO: exibir mensagem quando não houver notas
-  // TODO: mapear o array notes e renderizar um NoteCard para cada item
+  if (notes.length === 0) {
+    return <div className="empty-state">Nenhuma nota encontrada.</div>;
+  }
 
   return (
-    <div>
-      {/* Mapear notes e renderizar <NoteCard> para cada nota */}
-      {/* Exibir "Nenhuma nota encontrada." quando o array estiver vazio */}
+    <div className="note-list">
+      {notes.map((note) => (
+        <NoteCard
+          key={note.id}
+          note={note}
+          onEdit={onEdit}
+          onDelete={onDelete}
+        />
+      ))}
     </div>
   );
 }
