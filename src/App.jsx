@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import NoteList from './NoteList';
 import NoteForm from './NoteForm';
 import { getNotes, createNote, updateNote, deleteNote } from './api';
+import './App.css';
 
 // Componente raiz. Gerencia o estado global da aplicação.
 // Estado necessário:
@@ -64,19 +65,23 @@ function App() {
   };
 
   if (loading) {
-    return <div>Carregando...</div>;
+    return <div className="loading-state">Carregando...</div>;
   }
 
   if (error) {
-    return <div>{error}</div>;
+    return <div className="error-state">{error}</div>;
   }
 
   return (
-    <div>
-      <h1>Gerenciador de Notas</h1>
-      {!showForm && (
-        <button onClick={() => setShowForm(true)}>Nova Nota</button>
-      )}
+    <div className="app-container">
+      <header className="app-header">
+        <h1 className="app-title">Minhas Notas</h1>
+        {!showForm && (
+          <button className="btn btn-primary" onClick={() => setShowForm(true)}>
+            Nova Nota
+          </button>
+        )}
+      </header>
       {showForm && (
         <NoteForm
           initialData={editingNote}
