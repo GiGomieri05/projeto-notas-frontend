@@ -14,7 +14,6 @@ function App() {
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [editingNote, setEditingNote] = useState(null);
   const [showForm, setShowForm] = useState(false);
 
   useEffect(() => {
@@ -45,8 +44,6 @@ function App() {
     setNotes((prevNotes) =>
       prevNotes.map((note) => (note.id === id ? updatedNote : note))
     );
-    setEditingNote(null);
-    setShowForm(false);
   };
 
   const handleDelete = async (id) => {
@@ -54,16 +51,7 @@ function App() {
     setNotes((prevNotes) => prevNotes.filter((note) => note.id !== id));
   };
 
-  const handleEdit = (note) => {
-    setEditingNote(note);
-    setShowForm(true);
-  };
-
-  const handleCancelEdit = () => {
-    setEditingNote(null);
-    setShowForm(false);
-  };
-
+  
   const renderContent = () => {
     if (loading) {
       return <div className="loading-state">Carregando notas...</div>;
@@ -76,8 +64,8 @@ function App() {
     return (
       <NoteList
         notes={notes}
-        onEdit={handleEdit}
         onDelete={handleDelete}
+        onUpdate={handleUpdate}
       />
     );
   };
@@ -89,10 +77,7 @@ function App() {
         {!showForm && (
           <button
             className="btn btn-primary"
-            onClick={() => {
-              setEditingNote(null);
-              setShowForm(true);
-            }}
+            onClick={() => setShowForm(true)}
           >
             Nova Nota
           </button>
@@ -100,12 +85,9 @@ function App() {
       </header>
       {showForm && (
         <NoteForm
-          initialData={editingNote}
-          onSubmit={editingNote
-            ? (data) => handleUpdate(editingNote.id, data)
-            : handleCreate
-          }
-          onCancel={handleCancelEdit}
+          initialData={null}
+          onSubmit={handleCreate}
+          onCancel={() => setShowForm(false)}
         />
       )}
       {renderContent()}

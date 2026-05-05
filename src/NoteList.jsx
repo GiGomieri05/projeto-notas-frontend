@@ -3,10 +3,10 @@ import NoteCard from './NoteCard';
 // Renderiza a lista de todas as notas.
 // Props esperadas:
 //   - notes: array de objetos nota
-//   - onEdit: função repassada para cada NoteCard
 //   - onDelete: função repassada para cada NoteCard
+//   - onUpdate: função repassada para cada NoteCard
 
-function NoteList({ notes, onEdit, onDelete }) {
+function NoteList({ notes, onDelete, onUpdate }) {
   if (notes.length === 0) {
     return <div className="empty-state">Nenhuma nota encontrada.</div>;
   }
@@ -17,8 +17,8 @@ function NoteList({ notes, onEdit, onDelete }) {
         <NoteCard
           key={note.id}
           note={note}
-          onEdit={onEdit}
           onDelete={onDelete}
+          onUpdate={onUpdate}
         />
       ))}
     </div>
