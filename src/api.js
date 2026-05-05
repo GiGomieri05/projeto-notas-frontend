@@ -18,6 +18,7 @@ export async function getNotes() {
 // body: { title, content }
 export async function createNote(data) {
   try {
+    console.log('Enviando POST para:', BASE_URL, 'com dados:', data);
     const response = await fetch(BASE_URL, {
       method: 'POST',
       headers: {
@@ -25,8 +26,11 @@ export async function createNote(data) {
       },
       body: JSON.stringify(data),
     });
+    console.log('Resposta recebida:', response.status);
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      const errorText = await response.text();
+      console.error('Erro HTTP:', response.status, errorText);
+      throw new Error(`HTTP error! status: ${response.status} - ${errorText}`);
     }
     return await response.json();
   } catch (error) {
